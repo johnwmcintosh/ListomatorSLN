@@ -11,6 +11,8 @@ namespace Listomator.Core
     {
         public const string ListomatorShell = "ListomatorShell";
         public const string ManageGroup = "ManageGroup";
+        public const string ManageList = "ManageList";
+        public const string ManageItem = "ManageItem";
         public const string MainPage = "MainPage";
 
         static Locator()
@@ -22,6 +24,8 @@ namespace Listomator.Core
 
             navigation.Configure(ListomatorShell, typeof(ListomatorShell));
             navigation.Configure(ManageGroup, typeof(ManageGroup));
+            navigation.Configure(ManageList, typeof(ManageList));
+            navigation.Configure(ManageItem, typeof(ManageItem));
             navigation.Configure(MainPage, typeof(MainPage));
             
             // D.I.
@@ -34,6 +38,8 @@ namespace Listomator.Core
             // ViewModels
             SimpleIoc.Default.Register<ListomatorShellViewModel>();
             SimpleIoc.Default.Register<ManageGroupViewModel>();
+            SimpleIoc.Default.Register<ManageListViewModel>();
+            SimpleIoc.Default.Register<ManageItemViewModel>();
 
             // Repo
             SimpleIoc.Default.Register<ListomatorRepository>();

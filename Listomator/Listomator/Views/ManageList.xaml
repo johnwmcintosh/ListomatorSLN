@@ -1,30 +1,30 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:core="clr-namespace:Listomator.Core;assembly=Listomator"
-             xmlns:viewmodels="clr-namespace:Listomator.ViewModels;assembly=Listomator"
              xmlns:models="clr-namespace:Listomator.Models;assembly=Listomator"
-
-             x:Class="Listomator.Views.ListomatorShell"
-             x:Name="listomatorShell">
+             xmlns:viewmodels="clr-namespace:Listomator.ViewModels;assembly=Listomator"
+             x:Class="Listomator.Views.ManageList">
+             
     <ContentPage.Content>
-        <StackLayout>
+
+        <StackLayout x:DataType="viewmodels:ManageListViewModel">
             <StackLayout Orientation="Horizontal" BackgroundColor="{StaticResource Primary}" HeightRequest="40" VerticalOptions="Start">
                 <Image Source="{core:ImageResource Source=Listomator.Images.refresh.png}" BackgroundColor="{StaticResource Primary}" HorizontalOptions="Start" HeightRequest="20" WidthRequest="20" Margin="15,0,0,0">
                     <Image.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding RefreshGroupsCommand}"/>
+                        <TapGestureRecognizer Command="{Binding RefreshListCommand}"/>
                     </Image.GestureRecognizers>
                 </Image>
-                <Label Text="Morning" TextColor="White" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand"/>
+                <Label Text="{Binding Group.GroupName}" TextColor="White" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand"/>
                 <Image Source="{core:ImageResource Source=Listomator.Images.plus.png}" BackgroundColor="{StaticResource Primary}" HorizontalOptions="End" HeightRequest="20" WidthRequest="20" Margin="0,0,15,0">
                     <Image.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding NavigateToManageGroupCommand}"/>
+                        <TapGestureRecognizer Command="{Binding}"/>
                     </Image.GestureRecognizers>
                 </Image>
             </StackLayout>
 
             <StackLayout BackgroundColor="White" VerticalOptions="StartAndExpand">
-                <CollectionView ItemsSource="{Binding ToDoGroups}" EmptyView="Please create a group" Margin="15,0,0,0">
+                <CollectionView ItemsSource="{Binding Group.Items}" EmptyView="Please create a item for this list" Margin="15,0,0,0">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <SwipeView>
@@ -33,18 +33,18 @@
                                         <SwipeItem 
                                             Text="Edit" 
                                             BackgroundColor="DarkSeaGreen" 
-                                            Command="{Binding Source={x:Reference listomatorShell}, Path=BindingContext.ManangeGroupCommand}"
+                                            Command="{Binding Source={x:Reference listomatorShell}, Path=BindingContext.ManangeItemCommand}"
                                             CommandParameter="{Binding  }"/>
                                         <SwipeItem 
                                             Text="Delete" 
                                             BackgroundColor="LightCoral" 
-                                            Command="{Binding Source={x:Reference listomatorShell}, Path=BindingContext.DeleteGroupCommand}" 
+                                            Command="{Binding Source={x:Reference listomatorShell}, Path=BindingContext.DeleteItemCommand}" 
                                             CommandParameter="{Binding}"/>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
-                                <Label x:DataType="models:ToDoGroup" Text="{Binding GroupName}" FontSize="24">
+                                <Label x:DataType="models:ToDoItem" Text="{Binding ItemName}" FontSize="24">
                                     <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding NavigateToGroupCommand}" CommandParameter="{Binding}"/>
+                                        <TapGestureRecognizer Command="{Binding}" CommandParameter="{Binding}"/>
                                     </Label.GestureRecognizers>
                                 </Label>
                             </SwipeView>

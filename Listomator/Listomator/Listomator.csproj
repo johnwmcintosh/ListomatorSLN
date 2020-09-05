@@ -36,16 +36,28 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\ManageList.xaml.cs">
+      <DependentUpon>ManageList.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\ManageGroup.xaml.cs">
       <DependentUpon>ManageGroup.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ManageItem.xaml.cs">
+      <DependentUpon>ManageItem.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Views\ManageList.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\ManageGroup.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\ListomatorShell.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\ManageItem.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

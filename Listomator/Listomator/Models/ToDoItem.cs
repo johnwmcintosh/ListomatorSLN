@@ -60,6 +60,12 @@ namespace Listomator.Models
             CompletionDate = default;
         }
 
+        public ICommand NavigateToManageItemCommand { get; private set; }
+        private void OnNavigateToMangeItem(ToDoItem item)
+        {
+            App.Locator.NavigationService.NavigateTo(Locator.ManageItem, item);
+        }
+
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // HANDLERS
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,6 +86,7 @@ namespace Listomator.Models
         {
             SetCompleteCommand = new Command(OnSetComplete);
             RestoreCommand = new Command(OnRestore);
+            NavigateToManageItemCommand = new Command<ToDoItem>(OnNavigateToMangeItem);
 
             _dueDateTimer.Elapsed += _dueDateTimer_Elapsed;
             _dueDateTimer.Interval = 2000;

@@ -14,8 +14,8 @@ namespace Listomator.Models
         private string _groupName;
         public string GroupName { get => _groupName; set => SetProperty(ref _groupName, value); }
 
-        private ObservableCollection<ToDoItems> _group = new ObservableCollection<ToDoItems>();
-        public ObservableCollection<ToDoItems> Group { get => _group; set => SetProperty(ref _group, value); }
+        private ObservableCollection<ToDoItems> _items = new ObservableCollection<ToDoItems>();
+        public ObservableCollection<ToDoItems> Items { get => _items; set => SetProperty(ref _items, value); }
 
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Commands
@@ -23,16 +23,22 @@ namespace Listomator.Models
         public ICommand AddListCommand { get; private set; }
         private void OnAddList(string name)
         {
-            Group.Add(Locator.GetClass<ToDoItems>(name));
+            Items.Add(Locator.GetClass<ToDoItems>(name));
         }
 
         public ICommand RemoveListCommand { get; private set; }
         private void OnRemoveList(string name)
         {
-            var td = Group.FirstOrDefault(t => t.ListName == name);
-            if (td != null) { Group.Remove(td); }
+            var td = Items.FirstOrDefault(t => t.ListName == name);
+            if (td != null) { Items.Remove(td); }
         }
-        
+
+        public ICommand NavigateToGroupCommand { get; private set; }
+        private void OnNavigateToGroup(ToDoGroup group)
+        {
+            App.Locator.NavigationService.NavigateTo(Locator.ManageList, group);
+        }
+
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // INITIALIZERS
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,6 +46,7 @@ namespace Listomator.Models
         {
             AddListCommand = new Command<string>(OnAddList);
             RemoveListCommand = new Command<string>(OnRemoveList);
+            NavigateToGroupCommand = new Command<ToDoGroup>(OnNavigateToGroup);
         }
 
         public override void Init()
