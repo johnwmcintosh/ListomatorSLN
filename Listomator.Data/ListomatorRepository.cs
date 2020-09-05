@@ -59,9 +59,20 @@ namespace Listomator.Data
         {
             using (var db = new ListomatorContext())
             {
-                var group = await db.ToDoGroups.FirstOrDefaultAsync(t => t.ToDoGroupName == name);
-                if (group != null)
-                    db.ToDoGroups.Remove(group);
+                try
+                {
+
+                    var group = await db.ToDoGroups.FirstOrDefaultAsync(t => t.ToDoGroupName == name);
+                    if (group != null)
+                        db.ToDoGroups.Remove(group);
+
+                    await db.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
             }
         }
 

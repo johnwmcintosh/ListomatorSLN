@@ -1,7 +1,8 @@
 ﻿using Listomator.Core;
 using Listomator.Data;
-using System.Windows.Input;
 using Listomator.Models;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Listomator.ViewModels
@@ -10,7 +11,8 @@ namespace Listomator.ViewModels
     {
         private ListomatorRepository _context;
 
-        private ToDoGroup group;
+        private ToDoGroup todoGroup;
+        private ObservableCollection<ToDoGroup> todoGroups;
 
         // ////////////////////////////////////////////////////////////////////////////////////////////////////////
         // OBSERVABLES
@@ -28,8 +30,17 @@ namespace Listomator.ViewModels
         public ICommand SaveGroupNameCommand { get; private set; }
         private async void OnSaveGroupName()
         {
-            await _context.UpdateGroupNameAsync(group.GroupName, GroupName);
-            group.GroupName = GroupName;
+            if (todoGroup == null)
+            {
+                await _context.AddGroupAsync(GroupName);
+                todoGroups.Add(new ToDoGroup{GroupName = GroupName });
+            }
+            else
+            {
+                await _context.UpdateGroupNameAsync(todoGroup.GroupName, GroupName);
+                todoGroup.GroupName = GroupName;
+            }
+            
             App.Locator.NavigationService.GoBack();
         }
 
@@ -60,13 +71,24 @@ namespace Listomator.ViewModels
 
         public override void Init()
         {
-            
+            GroupName = string.Empty;
+            todoGroup = null;
         }
 
         public override void Init(object data)
         {
-            group = (ToDoGroup) data;
-            GroupName = group.GroupName;
+            if (data is ToDoGroup group)
+            {
+                todoGroup = group;
+                todoGroups = null;
+                GroupName = group.GroupName;
+            }
+            else if (data is ObservableCollection<ToDoGroup> groups)
+            {
+                todoGroup = null;
+                todoGroups = groups;
+                GroupName = string.Empty;
+            }
         }
     }
 }

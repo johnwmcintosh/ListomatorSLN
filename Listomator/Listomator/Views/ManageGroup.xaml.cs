@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.ObjectModel;
 using Listomator.Core;
 using Listomator.Models;
 using Listomator.ViewModels;
@@ -20,6 +21,12 @@ namespace Listomator.Views
         {
             InitializeComponent();
             BindingContext = Locator.GetClass<ManageGroupViewModel>(group);
+        }
+
+        public ManageGroup(ObservableCollection<ToDoGroup> groups)
+        {
+            InitializeComponent();
+            BindingContext = Locator.GetClass<ManageGroupViewModel>(groups);
         }
     }
 }

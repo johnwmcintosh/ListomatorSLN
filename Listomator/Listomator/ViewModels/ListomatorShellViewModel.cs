@@ -23,10 +23,16 @@ namespace Listomator.ViewModels
         // ////////////////////////////////////////////////////////////////////////////////////////////////////////
         // COMMANDS
         // ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public ICommand RefreshGroupsCommand { get; private set; }
+        private void OnRefreshGroups()
+        {
+            Init();
+        }
+
         public ICommand NavigateToManageGroupCommand { get; private set; }
         private void OnNavigateToManageGroup()
         {
-            App.Locator.NavigationService.NavigateTo(Locator.ManageGroup);
+            App.Locator.NavigationService.NavigateTo(Locator.ManageGroup, ToDoGroups);
         }
 
         public ICommand ManangeGroupCommand { get; private set; }
@@ -49,6 +55,7 @@ namespace Listomator.ViewModels
         {
             _context = context;
 
+            RefreshGroupsCommand = new Command(OnRefreshGroups);
             NavigateToManageGroupCommand = new Command(OnNavigateToManageGroup);
             ManangeGroupCommand = new Command<ToDoGroup>(OnManageGroup);
             DeleteGroupCommand = new Command<ToDoGroup>(OnDeleteGroup);
@@ -59,6 +66,7 @@ namespace Listomator.ViewModels
         {
             var groups = await _context.GetGroupsAsync();
 
+            ToDoGroups.Clear();
             foreach (var group in groups)
             {
                 ToDoGroups.Add(new ToDoGroup { GroupName = group.ToDoGroupName });
