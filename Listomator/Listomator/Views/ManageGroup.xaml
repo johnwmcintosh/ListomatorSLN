@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:core="clr-namespace:Listomator.Core;assembly=Listomator"
+             x:Class="Listomator.Views.ManageGroup">
+  <ContentPage.Content>
+      <StackLayout>
+          <StackLayout Orientation="Horizontal" BackgroundColor="{StaticResource Primary}" HeightRequest="40" VerticalOptions="Start">
+              <Label Text="New Group" TextColor="White" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand"/>
+              <Image Source="{core:ImageResource Source=Listomator.Images.check-mark.png}" IsEnabled="{Binding IsSavingPossible}" BackgroundColor="{StaticResource Primary}" HorizontalOptions="End" HeightRequest="35" WidthRequest="35" Margin="0,0,15,0">
+                  <Image.GestureRecognizers>
+                      <TapGestureRecognizer Command="{Binding SaveGroupNameCommand}"/>
+                  </Image.GestureRecognizers>
+              </Image>
+          </StackLayout>
+
+          <Label Text="Group name" Padding="0"/>
+            <Entry Text="{Binding GroupName}">
+                <Entry.Behaviors>
+                    <core:EventToCommandBehavior EventName="TextChanged" Command="{Binding GroupNameTextChangedCommand}"/>
+                </Entry.Behaviors>
+            </Entry>
+      </StackLayout>
+  </ContentPage.Content>
+</ContentPage>

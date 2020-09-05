@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:core="clr-namespace:Listomator.Core;assembly=Listomator"
+             xmlns:viewmodels="clr-namespace:Listomator.ViewModels;assembly=Listomator"
+             xmlns:models="clr-namespace:Listomator.Models;assembly=Listomator"
+
+             x:Class="Listomator.Views.ListomatorShell"
+             x:Name="listomatorShell">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout Orientation="Horizontal" BackgroundColor="{StaticResource Primary}" HeightRequest="40" VerticalOptions="Start">
+                <Label Text="Morning" TextColor="White" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand"/>
+                <Image Source="{core:ImageResource Source=Listomator.Images.plus.png}" BackgroundColor="{StaticResource Primary}" HorizontalOptions="End" HeightRequest="20" WidthRequest="20" Margin="0,0,15,0">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToManageGroupCommand}"/>
+                    </Image.GestureRecognizers>
+                </Image>
+            </StackLayout>
+
+            <StackLayout BackgroundColor="White" VerticalOptions="StartAndExpand">
+                <CollectionView ItemsSource="{Binding ToDoGroups}" EmptyView="Please create a group" Margin="15,0,0,0">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView>
+                                <SwipeView.LeftItems>
+                                    <SwipeItems>
+                                        <SwipeItem 
+                                            Text="Edit" 
+                                            BackgroundColor="DarkSeaGreen" 
+                                            Command="{Binding Source={x:Reference listomatorShell}, Path=BindingContext.ManangeGroupCommand}"
+                                            CommandParameter="{Binding  }"/>
+                                        <SwipeItem 
+                                            Text="Delete" 
+                                            BackgroundColor="LightCoral" 
+                                            Command="{Binding Source={x:Reference listomatorShell}, Path=BindingContext.DeleteGroupCommand}" 
+                                            CommandParameter="{Binding}"/>
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
+                                <Label x:DataType="models:ToDoGroup" Text="{Binding GroupName}" FontSize="24"/>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" BackgroundColor="White" VerticalOptions="End" Padding="0">
+                <Frame BorderColor="#D8D8D8" CornerRadius="0" HasShadow="True" HorizontalOptions="FillAndExpand" Padding="0">
+                    <Image Source="{core:ImageResource Source=Listomator.Images.Search-icon.png}" HeightRequest="60" WidthRequest="60" HorizontalOptions="StartAndExpand"/>
+                </Frame>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Listomator.MainPage">
+
+    <StackLayout>
+        <Frame BackgroundColor="{StaticResource Primary}" Padding="24" CornerRadius="0">
+            <Label Text="Welcome to Listomator" HorizontalTextAlignment="Center" TextColor="White" FontSize="24"/>
+        </Frame>
+        <Label Text="By John McIntosh" FontSize="Title" Padding="30,10,30,10"/>
+        <Label Text="ToDo App demo for Intellishift built over Labor Day weekend 2020" FontSize="16" Padding="30,0,30,0"/>
+
+
+        <Button HorizontalOptions="Center" Text="Reset lists" Margin="0,25,0,0"/>
+
+    </StackLayout>
+
+</ContentPage>
