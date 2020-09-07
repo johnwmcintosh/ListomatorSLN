@@ -4,27 +4,27 @@
              xmlns:core="clr-namespace:Listomator.Core;assembly=Listomator"
              xmlns:models="clr-namespace:Listomator.Models;assembly=Listomator"
              xmlns:viewmodels="clr-namespace:Listomator.ViewModels;assembly=Listomator"
-             x:Class="Listomator.Views.ManageList">
-             
+             x:Class="Listomator.Views.ItemsList"
+             x:Name="listomatorItem">
     <ContentPage.Content>
 
-        <StackLayout x:DataType="viewmodels:ManageListViewModel">
+        <StackLayout x:DataType="viewmodels:ItemsListViewModel">
             <StackLayout Orientation="Horizontal" BackgroundColor="{StaticResource Primary}" HeightRequest="40" VerticalOptions="Start">
                 <Image Source="{core:ImageResource Source=Listomator.Images.refresh.png}" BackgroundColor="{StaticResource Primary}" HorizontalOptions="Start" HeightRequest="20" WidthRequest="20" Margin="15,0,0,0">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding RefreshListCommand}"/>
                     </Image.GestureRecognizers>
                 </Image>
-                <Label Text="{Binding Group.GroupName}" TextColor="White" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand"/>
+                <Label Text="{Binding GroupName}" TextColor="White" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand"/>
                 <Image Source="{core:ImageResource Source=Listomator.Images.plus.png}" BackgroundColor="{StaticResource Primary}" HorizontalOptions="End" HeightRequest="20" WidthRequest="20" Margin="0,0,15,0">
                     <Image.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding}"/>
+                        <TapGestureRecognizer Command="{Binding ManangeItemCommand}"/>
                     </Image.GestureRecognizers>
                 </Image>
             </StackLayout>
 
             <StackLayout BackgroundColor="White" VerticalOptions="StartAndExpand">
-                <CollectionView ItemsSource="{Binding Group.Items}" EmptyView="Please create a item for this list" Margin="15,0,0,0">
+                <CollectionView ItemsSource="{Binding ToDoItems}" EmptyView="Please create a item for this list" Margin="15,0,0,0">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <SwipeView>
@@ -33,20 +33,17 @@
                                         <SwipeItem 
                                             Text="Edit" 
                                             BackgroundColor="DarkSeaGreen" 
-                                            Command="{Binding Source={x:Reference listomatorShell}, Path=BindingContext.ManangeItemCommand}"
+                                            x:DataType="models:ToDoItem"
+                                            Command="{Binding NavigateToManageItemCommand}"
                                             CommandParameter="{Binding  }"/>
                                         <SwipeItem 
                                             Text="Delete" 
                                             BackgroundColor="LightCoral" 
-                                            Command="{Binding Source={x:Reference listomatorShell}, Path=BindingContext.DeleteItemCommand}" 
+                                            Command="{Binding Source={x:Reference listomatorItem}, Path=BindingContext.DeleteItemCommand}" 
                                             CommandParameter="{Binding}"/>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
-                                <Label x:DataType="models:ToDoItem" Text="{Binding ItemName}" FontSize="24">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding}" CommandParameter="{Binding}"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
+                                <Label x:DataType="models:ToDoItem" Text="{Binding ItemName}" FontSize="24" FontAttributes="{Binding TodoAttributes}"/>
                             </SwipeView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

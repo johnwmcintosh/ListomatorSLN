@@ -7,18 +7,18 @@ using Xamarin.Forms.Xaml;
 namespace Listomator.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ManageList : ContentPage
+    public partial class ItemsList : ContentPage
     {
-        public ManageList()
+        public ItemsList()
         {
             InitializeComponent();
-            BindingContext = Locator.GetClass<ManageListViewModel>();
+            BindingContext = Locator.GetClass<ItemsListViewModel>();
         }
 
-        public ManageList(ToDoGroup group)
+        public ItemsList(ToDoGroup group)
         {
             InitializeComponent();
-            BindingContext = Locator.GetClass<ManageListViewModel>(group);
+            BindingContext = Locator.GetClass<ItemsListViewModel>(group);
         }
     }
 }

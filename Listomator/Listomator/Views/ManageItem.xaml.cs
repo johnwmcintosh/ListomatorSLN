@@ -21,5 +21,11 @@ namespace Listomator.Views
             BindingContext = Locator.GetClass<ManageItemViewModel>(item);
         }
 
+        public ManageItem(ToDoGroup group)
+        {
+            InitializeComponent();
+            BindingContext = Locator.GetClass<ManageItemViewModel>(group);
+        }
+
     }
 }

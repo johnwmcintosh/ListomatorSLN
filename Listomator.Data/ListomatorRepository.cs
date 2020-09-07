@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Listomator.Data
@@ -13,19 +14,26 @@ namespace Listomator.Data
         public ListomatorRepository()
         {
             using (var db = new ListomatorContext())
-                db.Database.EnsureCreated();
+            {
+                //db.Database.Migrate();
+                //db.Database.EnsureCreated();
+            }
         }
 
         public async Task<List<ToDoGroup>> GetGroupsAsync()
         {
             using (var db = new ListomatorContext())
+            {
                 return await db.ToDoGroups.OrderBy(t => t.ToDoGroupName).ToListAsync();
+            }
         }
 
         public async Task<List<ToDoItem>> GetGroupItemsAsync(string name)
         {
             using (var db = new ListomatorContext())
+            {
                 return await db.ToDoItems.Where(t => t.ToDoGroup.ToDoGroupName == name).ToListAsync();
+            }
         }
 
         public async Task UpdateGroupNameAsync(string oldName, string newName)
@@ -76,76 +84,97 @@ namespace Listomator.Data
             }
         }
 
-        public async Task AddItemToGroupAsync(string groupName, string itemName, DateTime dueDate = default)
+        public async Task AddItemToGroupAsync(string groupName, string itemName, bool isComplete, bool useDueDate, DateTime dueDate = default)
         {
             using (var db = new ListomatorContext())
             {
                 var g = await db.ToDoGroups.FirstOrDefaultAsync(t => t.ToDoGroupName == groupName);
                 if (g == null)
-                    throw new ArgumentOutOfRangeException(
-                        $"Attempting to add {itemName} to a non-existant group name {groupName}");
+                    throw new ArgumentOutOfRangeException($"Attempting to add {itemName} to a non-existant group name {groupName}");
 
-                if (!(await db.ToDoItems.AnyAsync(t =>
-                    t.ToDoGroup.ToDoGroupName == groupName && t.ToDoItemName == itemName)))
+                if (!(await db.ToDoItems.AnyAsync(t => t.ToDoGroup.ToDoGroupName == groupName && t.ToDoItemName == itemName)))
                 {
-                    await db.ToDoItems.AddAsync(new ToDoItem
-                        {DueDate = dueDate, UseDueDate = dueDate != default, ToDoGroup = g});
+                    DateTime completionDate = isComplete ? DateTime.Now : default;
+                    await db.ToDoItems.AddAsync(new ToDoItem {ToDoItemName = itemName, DueDate = dueDate, IsComplete = isComplete, CompletionDate = completionDate, UseDueDate = dueDate != default, ToDoGroup = g});
                     await db.SaveChangesAsync();
                 }
             }
         }
 
-        public async Task UpdateItemDueDateAsync(string groupName, string itemName, DateTime dueDate)
+        public async Task RemoveItemFromGroupAsync(string groupName, string itemName)
         {
             using (var db = new ListomatorContext())
             {
                 var g = await db.ToDoGroups.FirstOrDefaultAsync(t => t.ToDoGroupName == groupName);
                 if (g == null)
                     throw new ArgumentOutOfRangeException(
-                        $"Attempting to add {itemName} to a non-existant group name {groupName}");
+                        $"Attempting to remove {itemName} from a non-existant group name {groupName}");
 
-                var item = g.ToDoItems.FirstOrDefault(t => t.ToDoItemName == itemName);
+                var i = g.ToDoItems.FirstOrDefault(t => t.ToDoItemName == itemName);
+
+                if (i != null)
+                    db.ToDoItems.Remove(i);
+                else
+                    throw new ArgumentOutOfRangeException($"Attempting to remove an item {itemName} that doesn't exist in group {groupName}");
+
+                await db.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdateItemAsync(string groupName, string itemName, bool isComplete, bool useDueDate, DateTime dueDate, DateTime completionDate)
+        {
+            using (var db = new ListomatorContext())
+            {
+                var item = db.ToDoItems.FirstOrDefault(t => t.ToDoGroup.ToDoGroupName == groupName && t.ToDoItemName == itemName);
                 if (item != null)
                 {
                     item.DueDate = dueDate;
-                    item.UseDueDate = true;
+                    item.UseDueDate = useDueDate;
+                    item.IsComplete = isComplete;
+                    item.CompletionDate = completionDate;
                     await db.SaveChangesAsync();
                 }
             }
+
         }
 
         public async Task UpdateItemNameAsync(string groupName, string oldItemName, string newItemName)
         {
+            // WARNING THIS CHANGES A KEY
+            // MUST FIRST DELETE THE ROW
+
             using (var db = new ListomatorContext())
             {
-                var g = await db.ToDoGroups.FirstOrDefaultAsync(t => t.ToDoGroupName == groupName);
-                if (g == null)
-                    throw new ArgumentOutOfRangeException($"Attempting to update {oldItemName} to a non-existant group name {groupName}");
+                var item = db.ToDoItems.FirstOrDefault(t => t.ToDoGroup.ToDoGroupName == groupName && t.ToDoItemName == oldItemName);
 
-                var item = g.ToDoItems.FirstOrDefault(t => t.ToDoItemName == oldItemName);
+                var a = item;
                 if (item != null)
                 {
-                    item.ToDoItemName = newItemName;
+                    var copy = new ToDoItem { CompletionDate = item.CompletionDate, IsComplete = item.IsComplete, DueDate = item.DueDate, UseDueDate = item.UseDueDate, ToDoItemName = newItemName, ToDoGroup = item.ToDoGroup};
+                    db.ToDoItems.Remove(item);
+                    await db.SaveChangesAsync();
+
+                    await db.ToDoItems.AddAsync(copy);
                     await db.SaveChangesAsync();
                 }
             }
         }
 
-        public async Task UpdateItemUseDueDateAsync(string groupName, string itemName, bool useDueDate)
+        public async Task ChangeItemGroupAsync(string oldGroupName, string newGroupName, string itemName)
         {
             using (var db = new ListomatorContext())
             {
-                var g = await db.ToDoGroups.FirstOrDefaultAsync(t => t.ToDoGroupName == groupName);
-                if (g == null)
-                    throw new ArgumentOutOfRangeException($"Attempting to update {itemName} to a non-existant group name {groupName}");
+                var g = await db.ToDoGroups.FirstOrDefaultAsync(t => t.ToDoGroupName == oldGroupName);
+                if (g == null)  throw new ArgumentOutOfRangeException($"Attempting to update {itemName} to a non-existant group name {newGroupName}");
 
-                var item = g.ToDoItems.FirstOrDefault(t => t.ToDoItemName == itemName);
+                var item = g.ToDoItems.FirstOrDefault(t => t.ToDoGroup.ToDoGroupName == oldGroupName && t.ToDoItemName == itemName);
                 if (item != null)
                 {
-                    item.UseDueDate = useDueDate;
+                    item.ToDoGroup = g;
                     await db.SaveChangesAsync();
                 }
             }
+
         }
 
         public async Task UpdateItemCompletionAsync(string groupName, string itemName, bool isComplete)

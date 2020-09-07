@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Listomator.Data.Migrations
 {
     [DbContext(typeof(ListomatorContext))]
-    [Migration("20200904212903_initial")]
-    partial class initial
+    [Migration("20200906184408_Initialize")]
+    partial class Initialize
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

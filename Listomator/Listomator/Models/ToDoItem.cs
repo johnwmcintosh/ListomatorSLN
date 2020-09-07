@@ -16,6 +16,8 @@ namespace Listomator.Models
 
         private readonly Timer _dueDateTimer = new Timer();
 
+        public ToDoGroup Group { get; set; }
+
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // OBSERVABLES
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,7 +28,7 @@ namespace Listomator.Models
         public bool IsComplete
         {
             get => _isComplete;
-            set { _dueDateTimer.Stop(); SetProperty(ref _isComplete, value); }
+            set { _dueDateTimer.Stop(); SetProperty(ref _isComplete, value); TodoAttributes = IsComplete ? FontAttributes.Italic : FontAttributes.None; }
         }
         
         private bool _useDueDate;
@@ -41,6 +43,9 @@ namespace Listomator.Models
 
         private DateTime _completionDate;
         public DateTime CompletionDate { get => _completionDate; set => SetProperty(ref _completionDate, value); }
+
+        private FontAttributes _todoAttributes;
+        public FontAttributes TodoAttributes { get => _todoAttributes; set => SetProperty(ref _todoAttributes,value); }
 
 
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,7 +76,7 @@ namespace Listomator.Models
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private void _dueDateTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (DueDate >= DateTime.Now)
+            if (DueDate < DateTime.Now)
             {
                 _dueDateTimer.Stop();
                 OnItemDue?.Invoke(this);
@@ -89,7 +94,7 @@ namespace Listomator.Models
             NavigateToManageItemCommand = new Command<ToDoItem>(OnNavigateToMangeItem);
 
             _dueDateTimer.Elapsed += _dueDateTimer_Elapsed;
-            _dueDateTimer.Interval = 2000;
+            _dueDateTimer.Interval = 5000;
         }
 
         public override void Init()
@@ -100,6 +105,7 @@ namespace Listomator.Models
         public override void Init(object data)
         {
             ItemName = (string) data;
+
         }
 
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

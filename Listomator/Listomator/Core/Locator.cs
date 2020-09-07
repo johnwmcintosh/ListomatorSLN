@@ -11,7 +11,7 @@ namespace Listomator.Core
     {
         public const string ListomatorShell = "ListomatorShell";
         public const string ManageGroup = "ManageGroup";
-        public const string ManageList = "ManageList";
+        public const string ItemsList = "ItemsList";
         public const string ManageItem = "ManageItem";
         public const string MainPage = "MainPage";
 
@@ -24,7 +24,7 @@ namespace Listomator.Core
 
             navigation.Configure(ListomatorShell, typeof(ListomatorShell));
             navigation.Configure(ManageGroup, typeof(ManageGroup));
-            navigation.Configure(ManageList, typeof(ManageList));
+            navigation.Configure(ItemsList, typeof(ItemsList));
             navigation.Configure(ManageItem, typeof(ManageItem));
             navigation.Configure(MainPage, typeof(MainPage));
             
@@ -32,13 +32,12 @@ namespace Listomator.Core
 
             // Models
             SimpleIoc.Default.Register<ToDoItem>();
-            SimpleIoc.Default.Register<ToDoItems>();
             SimpleIoc.Default.Register<ToDoGroup>();
 
             // ViewModels
             SimpleIoc.Default.Register<ListomatorShellViewModel>();
             SimpleIoc.Default.Register<ManageGroupViewModel>();
-            SimpleIoc.Default.Register<ManageListViewModel>();
+            SimpleIoc.Default.Register<ItemsListViewModel>();
             SimpleIoc.Default.Register<ManageItemViewModel>();
 
             // Repo

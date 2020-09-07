@@ -33,8 +33,7 @@
                                         <SwipeItem 
                                             Text="Edit" 
                                             BackgroundColor="DarkSeaGreen" 
-                                            Command="{Binding Source={x:Reference listomatorShell}, Path=BindingContext.ManangeGroupCommand}"
-                                            CommandParameter="{Binding  }"/>
+                                            Command="{Binding NavigateToManageGroupCommand}"/>
                                         <SwipeItem 
                                             Text="Delete" 
                                             BackgroundColor="LightCoral" 
@@ -44,7 +43,7 @@
                                 </SwipeView.LeftItems>
                                 <Label x:DataType="models:ToDoGroup" Text="{Binding GroupName}" FontSize="24">
                                     <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding NavigateToGroupCommand}" CommandParameter="{Binding}"/>
+                                        <TapGestureRecognizer Command="{Binding NavigateToItemsListCommand}"/>
                                     </Label.GestureRecognizers>
                                 </Label>
                             </SwipeView>

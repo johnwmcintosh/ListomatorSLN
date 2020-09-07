@@ -1,10 +1,43 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:core="clr-namespace:Listomator.Core;assembly=Listomator"
+             xmlns:viewmodels="clr-namespace:Listomator.ViewModels;assembly=Listomator"
+             xmlns:controls="clr-namespace:XamForms.Controls;assembly=XamForms.Controls.Calendar"
+
+             x:DataType="viewmodels:ManageItemViewModel"
              x:Class="Listomator.Views.ManageItem">
     <ContentPage.Content>
-      <StackLayout>
-          <Label Text="Hello Xamarin.Forms!" />
-      </StackLayout>
-  </ContentPage.Content>
+        <StackLayout>
+            <StackLayout Orientation="Horizontal" BackgroundColor="{StaticResource Primary}" HeightRequest="40" VerticalOptions="Start">
+                <Label Text="New Item" TextColor="White" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand"/>
+                <Image Source="{core:ImageResource Source=Listomator.Images.check-mark.png}" BackgroundColor="{StaticResource Primary}" HorizontalOptions="End" HeightRequest="35" WidthRequest="35" Margin="0,0,15,0">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SaveItemCommand}"/>
+                    </Image.GestureRecognizers>
+                </Image>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal">
+                <StackLayout Margin="10,0,0,0" Padding="0" HorizontalOptions="StartAndExpand">
+                    <Label Text="Item name" Padding="0"/>
+                    <Entry Text="{Binding ItemName}" WidthRequest="200" HorizontalOptions="StartAndExpand">
+                        <Entry.Behaviors>
+                            <core:EventToCommandBehavior EventName="TextChanged" Command="{Binding ItemNameTextChangedCommand}"/>
+                        </Entry.Behaviors>
+                    </Entry>
+                </StackLayout>
+                <StackLayout Margin="15,0,15,0" Padding="0" HorizontalOptions="End">
+                    <Label Text="Complete" Padding="0"/>
+                    <CheckBox IsChecked="{Binding IsComplete}"/>
+                </StackLayout>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" Margin="10,25,0,0">
+                <CheckBox IsChecked="{Binding UseDueDate}"/>
+                <Label Text="Use Due date"/>
+            </StackLayout>
+            <controls:Calendar IsEnabled="{Binding UseDueDate}" StartDay="Monday" SelectedBorderWidth="4" DisabledBorderColor="Black" SelectedDate="{Binding DueDate}" Margin="10,5,10,0"/>
+        </StackLayout>
+    </ContentPage.Content>
 </ContentPage>

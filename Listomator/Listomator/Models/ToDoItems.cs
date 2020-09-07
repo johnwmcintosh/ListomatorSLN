@@ -1,4 +1,5 @@
-﻿using Listomator.Core;
+﻿using System;
+using Listomator.Core;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -6,6 +7,7 @@ using Xamarin.Forms;
 
 namespace Listomator.Models
 {
+    [Obsolete]
     public class ToDoItems : NotifyBase
     {
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

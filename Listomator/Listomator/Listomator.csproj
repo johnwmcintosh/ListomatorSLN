@@ -29,6 +29,7 @@
     <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
     <PackageReference Include="Xamarin.Forms" Version="4.8.0.1364" />
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
+    <PackageReference Include="XamForms.Enhanced.Calendar" Version="1.4.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,8 +37,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\ManageList.xaml.cs">
-      <DependentUpon>ManageList.xaml</DependentUpon>
+    <Compile Update="Views\ItemsList.xaml.cs">
+      <DependentUpon>ItemsList.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\ManageGroup.xaml.cs">
       <DependentUpon>ManageGroup.xaml</DependentUpon>
@@ -48,7 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Views\ManageList.xaml">
+    <EmbeddedResource Update="Views\ItemsList.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\ManageGroup.xaml">

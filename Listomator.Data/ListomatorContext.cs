@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace Listomator.Data.Model
 {
@@ -14,9 +15,20 @@ namespace Listomator.Data.Model
 
         private static readonly string DatabasePath = Path.Combine(Xamarin.Essentials.FileSystem.AppDataDirectory, "Listomator.db3");
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        protected override async void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseSqlite($"DataSource={DatabasePath}");
+            // use this for creating migrations
+            string dbPath;
+            if (DeviceInfo.Platform == DevicePlatform.Unknown)
+                dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Listomator.db3");
+            else
+                dbPath = Path.Combine(FileSystem.AppDataDirectory, "Listomator.db3");
+            
+            
+            options.UseSqlite($"DataSource={dbPath}");
+
+            //await Database.EnsureCreatedAsync();
+            //await Database.MigrateAsync();
         }
 
 

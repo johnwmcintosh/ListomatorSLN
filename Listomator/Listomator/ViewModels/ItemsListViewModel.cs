@@ -1,21 +1,26 @@
 ﻿using Listomator.Core;
 using Listomator.Data;
 using Listomator.Models;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Listomator.ViewModels
 {
-    public class ManageListViewModel : NotifyBase
+    public class ItemsListViewModel : NotifyBase
     {
         private ListomatorRepository _context;
+
+        private ToDoGroup _group;
+
+        public string GroupName => _group.GroupName;
 
         // ////////////////////////////////////////////////////////////////////////////////////////////////////////
         // OBSERVABLES
         // ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ToDoGroup _group;
-        public ToDoGroup Group { get => _group ; set => SetProperty(ref _group, value); }
-
+        private ObservableCollection<ToDoItem> _toDoItems;
+        public ObservableCollection<ToDoItem> ToDoItems { get => _toDoItems; set => SetProperty(ref _toDoItems, value); }
+        
         // ////////////////////////////////////////////////////////////////////////////////////////////////////////
         // COMMANDS
         // ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,29 +30,32 @@ namespace Listomator.ViewModels
             Init();
         }
 
-        public ICommand NavigateToManageListCommand { get; private set; }
-        private void OnNavigateToManageList()
+        public ICommand ManangeItemCommand { get; private set; }
+        private void OnManageItem(ToDoItem item)
         {
+            if (item == null)
+                App.Locator.NavigationService.NavigateTo(Locator.ManageItem, _group);
+            else
+                App.Locator.NavigationService.NavigateTo(Locator.ManageItem, item);
         }
 
-        public ICommand ManangeListsCommand { get; private set; }
-        private void OnManageLists(ToDoGroup group)
+        public ICommand DeleteItemCommand { get; private set; }
+        private async void OnDeleteItem(ToDoItem item)
         {
+            await _context.RemoveItemFromGroupAsync(_group.GroupName, item.ItemName);
+            ToDoItems.Remove(item);
         }
-
-        public ICommand DeleteListCommand { get; private set; }
-        private async void OnDeleteList(ToDoItems items)
-        {
-        }
-
 
         // ////////////////////////////////////////////////////////////////////////////////////////////////////////
         // INITALIZERES
         // ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public ManageListViewModel(ListomatorRepository context)
+        public ItemsListViewModel(ListomatorRepository context)
         {
             _context = context;
+
             RefreshListCommand = new Command(OnRefreshList);
+            ManangeItemCommand = new Command<ToDoItem>(OnManageItem);
+            DeleteItemCommand = new Command<ToDoItem>(OnDeleteItem);
         }
 
         public override void Init()
@@ -58,7 +66,10 @@ namespace Listomator.ViewModels
         public override void Init(object data)
         {
             if (data is ToDoGroup group)
-                Group = group;
+            {
+                _group = group;
+                ToDoItems = group.Items;
+            }
         }
     }
 }

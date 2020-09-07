@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows.Input;
-using Listomator.Core;
+﻿using Listomator.Core;
 using Listomator.Data;
 using Listomator.Models;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Listomator.ViewModels
@@ -69,7 +67,13 @@ namespace Listomator.ViewModels
             ToDoGroups.Clear();
             foreach (var group in groups)
             {
-                ToDoGroups.Add(new ToDoGroup { GroupName = group.ToDoGroupName });
+                var g = new ToDoGroup { GroupName = group.ToDoGroupName };
+
+                var items = await _context.GetGroupItemsAsync(g.GroupName);
+                foreach (var item in items)
+                    g.Items.Add(new ToDoItem { ItemName = item.ToDoItemName, CompletionDate = item.CompletionDate, IsComplete = item.IsComplete, DueDate = item.DueDate, UseDueDate = item.UseDueDate, Group = g });
+
+                ToDoGroups.Add(g);
             }
         }
 

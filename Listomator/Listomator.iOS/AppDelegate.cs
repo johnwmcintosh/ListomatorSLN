@@ -23,7 +23,8 @@ namespace Listomator.iOS
 
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
-            
+            XamForms.Controls.iOS.Calendar.Init();
+
             return base.FinishedLaunching(app, options);
         }
     }
