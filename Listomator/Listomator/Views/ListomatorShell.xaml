@@ -41,11 +41,14 @@
                                             CommandParameter="{Binding}"/>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
-                                <Label x:DataType="models:ToDoGroup" Text="{Binding GroupName}" FontSize="24">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding NavigateToItemsListCommand}"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label x:DataType="models:ToDoGroup" Text="{Binding GroupName}" FontSize="24">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding NavigateToItemsListCommand}"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                    <Label Text="Due" IsVisible="{Binding IsChildDue}" FontSize="24" TextColor="Red" Margin="15,0,0,0"/>
+                                </StackLayout>
                             </SwipeView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

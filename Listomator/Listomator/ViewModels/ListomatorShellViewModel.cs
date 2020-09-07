@@ -71,7 +71,12 @@ namespace Listomator.ViewModels
 
                 var items = await _context.GetGroupItemsAsync(g.GroupName);
                 foreach (var item in items)
-                    g.Items.Add(new ToDoItem { ItemName = item.ToDoItemName, CompletionDate = item.CompletionDate, IsComplete = item.IsComplete, DueDate = item.DueDate, UseDueDate = item.UseDueDate, Group = g });
+                {
+                    var todoItem = new ToDoItem();
+                    todoItem.Init(item);
+                    todoItem.Group = g;
+                    g.Items.Add(todoItem);
+                }
 
                 ToDoGroups.Add(g);
             }

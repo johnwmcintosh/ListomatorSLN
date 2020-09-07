@@ -43,7 +43,10 @@
                                             CommandParameter="{Binding}"/>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
-                                <Label x:DataType="models:ToDoItem" Text="{Binding ItemName}" FontSize="24" FontAttributes="{Binding TodoAttributes}"/>
+                                <StackLayout Orientation="Horizontal" x:DataType="models:ToDoItem">
+                                    <Label Text="{Binding ItemName}" FontSize="24" FontAttributes="{Binding TodoAttributes}"/>
+                                    <Label Text="Due" IsVisible="{Binding IsDue}" FontSize="24" TextColor="Red" Margin="15,0,0,0"/>
+                                </StackLayout>
                             </SwipeView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

@@ -21,7 +21,7 @@
             <StackLayout Orientation="Horizontal">
                 <StackLayout Margin="10,0,0,0" Padding="0" HorizontalOptions="StartAndExpand">
                     <Label Text="Item name" Padding="0"/>
-                    <Entry Text="{Binding ItemName}" WidthRequest="200" HorizontalOptions="StartAndExpand">
+                    <Entry Text="{Binding ItemName}" IsReadOnly="{Binding IsNameReadOnly}" WidthRequest="200" HorizontalOptions="StartAndExpand">
                         <Entry.Behaviors>
                             <core:EventToCommandBehavior EventName="TextChanged" Command="{Binding ItemNameTextChangedCommand}"/>
                         </Entry.Behaviors>

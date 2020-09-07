@@ -38,6 +38,9 @@ namespace Listomator.Models
             set { SetProperty(ref _useDueDate, value); _dueDateTimer.Start(); }
         }
 
+        private bool _isDue = false;
+        public bool IsDue { get =>_isDue; set => SetProperty(ref _isDue, value); }
+
         private DateTime _dueDate;
         public DateTime DueDate { get => _dueDate; set => SetProperty(ref _dueDate, value); }
 
@@ -55,6 +58,7 @@ namespace Listomator.Models
         private void OnSetComplete()
         {
             IsComplete = true;
+            IsDue = false;
             CompletionDate = DateTime.Now;
         }
 
@@ -78,6 +82,7 @@ namespace Listomator.Models
         {
             if (DueDate < DateTime.Now)
             {
+                IsDue = true;
                 _dueDateTimer.Stop();
                 OnItemDue?.Invoke(this);
             }
@@ -104,8 +109,20 @@ namespace Listomator.Models
 
         public override void Init(object data)
         {
-            ItemName = (string) data;
+            if (data is Data.Model.ToDoItem item)
+            {
+                ItemName = item.ToDoItemName;
+                CompletionDate = item.CompletionDate;
+                IsComplete = item.IsComplete;
+                DueDate = item.DueDate;
+                UseDueDate = item.UseDueDate;
+            }
 
+            if (!IsComplete && UseDueDate && DueDate < DateTime.Now)
+            {
+                IsDue = true;
+                OnItemDue?.Invoke(this);
+            }
         }
 
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

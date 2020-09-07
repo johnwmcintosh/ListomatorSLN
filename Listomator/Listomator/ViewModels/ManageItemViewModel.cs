@@ -34,6 +34,9 @@ namespace Listomator.ViewModels
         private DateTime _dueDate;
         public DateTime DueDate { get => _dueDate; set => SetProperty(ref _dueDate, value); }
 
+        private bool _isNameReadOnly;
+        public bool IsNameReadOnly { get => _isNameReadOnly; set => SetProperty(ref _isNameReadOnly, value); }
+
 
         // ////////////////////////////////////////////////////////////////////////////////////////////////////////
         // COMMANDS
@@ -103,6 +106,7 @@ namespace Listomator.ViewModels
         {
             if (data is ToDoItem item)
             {
+                IsNameReadOnly = true;
                 _group = item.Group;
                 _todoItem = item;
                 _todoItems = null;
@@ -113,6 +117,7 @@ namespace Listomator.ViewModels
             }
             else if (data is ToDoGroup group)
             {
+                IsNameReadOnly = false;
                 _group = group;
                 _todoItem = null;
                 _todoItems = group.Items;
